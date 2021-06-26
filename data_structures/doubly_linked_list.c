@@ -4,6 +4,11 @@
 #define for_each_node(curr, list) \
     for (struct node_t *curr = list->head; curr; curr = curr->next)
 
+#define for_each_node_safe(curr, queue) \
+    for (struct node_t *curr = queue->head, *tmp = curr ? curr->next : NULL; \
+         curr; \
+         curr = tmp, tmp = tmp ? tmp->next : NULL)
+
 #define for_each_node_reverse(curr, list) \
     for (struct node_t *curr = list->tail; curr; curr = curr->prev)
 
@@ -61,8 +66,12 @@ void del_from_list(struct list_t *list, struct node_t *node)
             if (!curr->prev) {
                 /* deletion on head */
                 list->head = curr->next;
-                curr->next->prev = NULL;
-                curr->next = NULL;
+
+                /* if the list has only one element */
+                if (curr->next) {
+                    curr->next->prev = NULL;
+                    curr->next = NULL;
+                }
             } else if (!curr->next) {
                 /* deletion on tail */
                 list->tail = curr->prev;
@@ -74,6 +83,8 @@ void del_from_list(struct list_t *list, struct node_t *node)
                 curr->next->prev = curr->prev;
                 curr->next = curr->prev = NULL;
             }
+
+            free(curr);
             break;
         }
     }
@@ -89,7 +100,7 @@ void init_list(struct list_t **list)
 
 void destroy_list(struct list_t *list)
 {
-    for_each_node(curr, list) {
+    for_each_node_safe(curr, list) {
         del_from_list(list, curr);
     }
 
