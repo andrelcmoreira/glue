@@ -52,6 +52,7 @@ thread_pool_t create_pool(uint8_t pool_size) {
   pool->threads = malloc(sizeof(pthread_t) * pool_size);
 
   if (!pool->threads) {
+    free(pool);
     return NULL;
   }
 
