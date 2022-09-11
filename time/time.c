@@ -23,7 +23,7 @@ void add_days_to_date(const char *date, const int days, char *out_date) {
   sprintf(out_date, "%d-%d-%d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 }
 
-int main(int argc, char *argv[]) {
+int main(void) {
   char date[255] = { 0 };
 
   add_days_to_date("15-01-2021", 30, date);
