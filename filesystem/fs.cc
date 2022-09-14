@@ -4,6 +4,7 @@
 #include <string>
 
 #include <dirent.h>
+#include <errno.h>
 #include <limits.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -22,6 +23,8 @@ bool directory_exists(const std::string &dir) {
 
   if (d) {
     closedir(d);
+    return true;
+  } else if (errno == EACCESS) {
     return true;
   }
 
